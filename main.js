@@ -205,8 +205,12 @@ function gameController (
 
         //Resets the game if there is a winner
         if (check1 === true || check2 === true || check3 === true ||  check4 === true) {
-            alert("There is a winner");
+            alert("The game is restarting");
             board.reset();
+            if (getActivePlayer() === players[1]) {
+                switchPlayerTurn();
+            }
+            printNewRound();
             return;
 
         }
