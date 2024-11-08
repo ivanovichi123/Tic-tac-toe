@@ -1,5 +1,3 @@
-console.log("hey");
-
 // First we make the game board 
 function gameBoard () {
     //I define the rows, columns and the array of the board
@@ -14,6 +12,7 @@ function gameBoard () {
         }
     }
 
+    //Reset the board every time someone wins
     const reset = () => {
         for (let i = 0;i < board.length;i++){
             for (let j = 0; j < board.length;j++) {
@@ -33,7 +32,6 @@ function gameBoard () {
             //If the space is available you put the player token
             if (board[row][column] === 0) {
                 board[row][column] = playerValue;
-                // return true;
             }
             else {
                 console.log(`There is already a token in ${row}, ${column}.`);
@@ -47,6 +45,7 @@ function gameBoard () {
         console.log(theBoard);
     }
 
+    //Function that checks if there is three of the same tokens in a column
     const checkWinnerColumn = (activePlayer,switchPlayer) => {
         const theValues = board;
         for (let i = 0;i < theValues.length; i++) {
@@ -66,6 +65,7 @@ function gameBoard () {
         }
     }
 
+    //Function that checks if there is three of the same tokens in a row
     const checkWinnerRow = (activePlayer,switchPlayer) => {
         const theValues = board;
         for(let i = 0; i < theValues.length; i++) {
@@ -85,6 +85,7 @@ function gameBoard () {
         }
     }
 
+    //Function that checks if there is three of the same tokens in a diagonal form
     const checkDiagonalWinner = (activePlayer, switchPlayer) => {
         const theValues = board;
         let sum = "";
@@ -106,6 +107,7 @@ function gameBoard () {
         }
     }
 
+    //Function that checks if there is three of the same tokens in an inverse diagonal form
     const checkInverseDiagonalWinner = (activePlayer, switchPlayer) => {
         const theValues = board;
         let cont = 0;
@@ -129,6 +131,7 @@ function gameBoard () {
                 }
     }
 
+    //Function that gets the how a winner token should look (XXX or OOO)
     const getPossibilities = (activePlayer,switchPlayer) => {
         const proof1 = {
             name: activePlayer().name,
@@ -222,6 +225,7 @@ function gameController (
 
     }
 
+    //Prints the round for the first play
     printNewRound();
 
     return {playRound, getActivePlayer}
@@ -233,7 +237,7 @@ const game = gameController();
 
 
 
-// Make comments: not check
-// When you put a token that already exits just repeat the turn: not check
-// Decide how they win: not check
+// Make comments: Check
+// When you put a token that already exits just repeat the turn: Check
+// Decide how they win: Check
 
