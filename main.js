@@ -40,10 +40,8 @@ function gameBoard () {
         }
     }
     //Function that renders the board in the console
-    const getBoard = () => {
-        const theBoard = board;
-        console.log(theBoard);
-    }
+    const getBoard = () => board;
+        // console.log(theBoard);
 
     //Function that checks if there is three of the same tokens in a column
     const checkWinnerColumn = (activePlayer,switchPlayer) => {
@@ -156,6 +154,7 @@ function gameController (
 ) {
     //I store the functions of the gameBoard in another variable
     const board = gameBoard();
+
     //Define the players of the game
     const players = [
         {
@@ -168,7 +167,7 @@ function gameController (
         }
     ];
 
-    //The first player to play will the player one who is in the index 0 of the players array
+    //The first player to play will be the player one who is in the index 0 of the players array
     let activePlayer = players[0];
 
     //Function that switches who is the active player
@@ -201,6 +200,31 @@ function gameController (
         
 
         // check if someone wins
+        // let check1 = board.checkWinnerColumn(getActivePlayer,switchPlayerTurn);
+        // let check2 = board.checkWinnerRow(getActivePlayer,switchPlayerTurn);
+        // let check3 = board.checkDiagonalWinner(getActivePlayer, switchPlayerTurn);
+        // let check4 = board.checkInverseDiagonalWinner(getActivePlayer,switchPlayerTurn);
+
+        // //Resets the game if there is a winner
+        // if (check1 === true || check2 === true || check3 === true ||  check4 === true) {
+        //     alert("The game is restarting");
+        //     board.reset();
+        //     if (getActivePlayer() === players[1]) {
+        //         switchPlayerTurn();
+        //     }
+        //     printNewRound();
+        //     return;
+
+        // }
+
+
+        // switch player turn 
+        switchPlayerTurn();
+        printNewRound();
+
+    }
+
+    const checkWinner = () => {
         let check1 = board.checkWinnerColumn(getActivePlayer,switchPlayerTurn);
         let check2 = board.checkWinnerRow(getActivePlayer,switchPlayerTurn);
         let check3 = board.checkDiagonalWinner(getActivePlayer, switchPlayerTurn);
@@ -215,24 +239,76 @@ function gameController (
             }
             printNewRound();
             return;
-
         }
-
-
-        // switch player turn 
-        switchPlayerTurn();
-        printNewRound();
-
     }
 
     //Prints the round for the first play
     printNewRound();
 
-    return {playRound, getActivePlayer}
+    return {playRound, getActivePlayer, getBoard: board.getBoard, checkWinner};
+}
+
+function screenController () {
+    const game = gameController();
+    const playerTurnDiv = document.querySelector(".turn");
+    const boardDiv = document.querySelector(".board");
+
+    const updateScreen = () => {
+        boardDiv.textContent = "";
+    
+    const board = game.getBoard();
+    const activePlayer = game.getActivePlayer();
+    playerTurnDiv.textContent = `${activePlayer.name}'s turn.....`;
+
+    let i = 0
+    board.forEach(row => {
+        let j = 0;
+        row.forEach ((cell, index)  => {
+            const cellButton = document.createElement("button");
+            cellButton.classList.add("cell");
+            cellButton.dataset.column = index;
+            cellButton.dataset.row = i;
+            cellButton.textContent = game.getBoard()[i][j];
+            boardDiv.appendChild(cellButton);
+            j++
+        })
+        i += 1;
+    })
+
+
+}
+
+    function clickHandlerBoard(e) {
+        const selectedColumn = e.target.dataset.column;
+        const selectedRow = e.target.dataset.row;
+        if (!selectedColumn || !selectedRow) return;
+        game.playRound(selectedRow,selectedColumn);
+        updateScreen();
+        setTimeout(() => {
+            checkWinner();
+          }, 1);
+        console.log(game.getBoard());
+}
+boardDiv.addEventListener("click", clickHandlerBoard);
+
+const checkWinner = () => {
+    game.checkWinner();
+    updateScreen();
 }
 
 
-const game = gameController();
+updateScreen();
+
+
+
+
+}
+
+screenController();
+
+
+
+// const game = gameController();
 
 
 
@@ -240,4 +316,8 @@ const game = gameController();
 // Make comments: Check
 // When you put a token that already exits just repeat the turn: Check
 // Decide how they win: Check
+
+// To do:
+
+// change the for Each to affect also the column: uncheck;
 
