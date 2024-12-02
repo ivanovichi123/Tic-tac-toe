@@ -8,7 +8,7 @@ function gameBoard () {
     for (let i = 0; i < row; i++) {  
         board[i] = [];
         for (let j = 0; j < column; j++) {
-            board[i].push(0); 
+            board[i].push(""); 
         }
     }
 
@@ -16,7 +16,7 @@ function gameBoard () {
     const reset = () => {
         for (let i = 0;i < board.length;i++){
             for (let j = 0; j < board.length;j++) {
-                board[i][j] = 0;
+                board[i][j] = "";
             }
         }
     }
@@ -30,7 +30,7 @@ function gameBoard () {
         }
         else {
             //If the space is available you put the player token
-            if (board[row][column] === 0) {
+            if (board[row][column] === "") {
                 board[row][column] = playerValue;
             }
             else {
@@ -197,25 +197,7 @@ function gameController (
         if(board.putPiece(row,column,getActivePlayer().token) === false){
             return;
         } 
-        
-
-        // check if someone wins
-        // let check1 = board.checkWinnerColumn(getActivePlayer,switchPlayerTurn);
-        // let check2 = board.checkWinnerRow(getActivePlayer,switchPlayerTurn);
-        // let check3 = board.checkDiagonalWinner(getActivePlayer, switchPlayerTurn);
-        // let check4 = board.checkInverseDiagonalWinner(getActivePlayer,switchPlayerTurn);
-
-        // //Resets the game if there is a winner
-        // if (check1 === true || check2 === true || check3 === true ||  check4 === true) {
-        //     alert("The game is restarting");
-        //     board.reset();
-        //     if (getActivePlayer() === players[1]) {
-        //         switchPlayerTurn();
-        //     }
-        //     printNewRound();
-        //     return;
-
-        // }
+    
 
 
         // switch player turn 
