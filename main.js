@@ -129,6 +129,22 @@ function gameBoard () {
                 }
     }
 
+    //Function that checks if there is a tie
+    const checkTie = () => {
+        const theValues = board;
+        let sum = "";
+        for(let i = 0; i < theValues.length; i++) {
+            for (let j = 0; j < theValues.length; j++) {
+                // if (theValues[i][j] != "X" && theValues[i][j] != "O")
+                sum += theValues[j][i];
+            }
+        }
+        let possibleTie = sum.length;
+        if (possibleTie === 9) {
+            return true;
+        }
+    }
+
     //Function that gets the how a winner token should look (XXX or OOO)
     const getPossibilities = (activePlayer,switchPlayer) => {
         const proof1 = {
@@ -143,32 +159,74 @@ function gameBoard () {
         switchPlayer();
         return [proof1,proof2]; 
     }
-    //I return the functions
-    return {putPiece,getBoard, checkWinnerColumn, checkWinnerRow, checkDiagonalWinner, checkInverseDiagonalWinner, reset}
+
+    //Return the functions
+    return {putPiece,getBoard, checkWinnerColumn, checkWinnerRow, checkDiagonalWinner, checkInverseDiagonalWinner, checkTie,reset}
 }
 
-//Now we make the movements of the game
-function gameController (
-    playerOneName = "PlayerOne",
-    playerTwoName = "PlayerTwo"
+//Make the movements of the game
+function gameController ( number
 ) {
-    //I store the functions of the gameBoard in another variable
+    //Store the functions of the gameBoard in another variable
     const board = gameBoard();
+    const submitButtonOne = document.querySelector("#PlayerOneName");
+    const playerOneNameEnter = document.querySelector("#playerOne_name");
+    const submitButtonTwo = document.querySelector("#PlayerTwoName");
+    const playerTwoNameEnter = document.querySelector("#playerTwo_name");
+    let P1Score = 0;
+    let P2Score = 0;
+    let ties = 0;
+
+
+    // Function that changes the name of the players
+    const nameChanger = () => {
+        submitButtonOne.addEventListener("click",() => {
+            alert("Player one name has been change");
+            let playerOneName = document.getElementById("playerOne_name").value;
+            players[0].name = playerOneName;
+            return players[0].name;
+        });
+
+        playerOneNameEnter.addEventListener("keypress", function(event){
+            if(event.key === "Enter") {
+                event.preventDefault();
+                event.stopPropagation();
+                submitButtonOne.click();
+            }
+        })
+
+        submitButtonTwo.addEventListener("click",() => {
+            alert("Player two name has been change");
+            let playerTwoName = document.getElementById("playerTwo_name").value;
+            players[1].name = playerTwoName;
+            return players[1].name;
+        });
+
+        playerTwoNameEnter.addEventListener("keypress", function(event){
+            if(event.key === "Enter") {
+                event.preventDefault();
+                event.stopPropagation();
+                submitButtonTwo.click();
+            }
+        })
+    }
+
 
     //Define the players of the game
     const players = [
         {
-            name: playerOneName,
+            name: "PlayerOne",
             token: "X"
         },
         {
-            name:playerTwoName,
+            name: "PlayerTwo",
             token: "O"
         }
     ];
 
     //The first player to play will be the player one who is in the index 0 of the players array
     let activePlayer = players[0];
+
 
     //Function that switches who is the active player
     const switchPlayerTurn = () => {
@@ -198,56 +256,111 @@ function gameController (
             return;
         } 
     
-
-
         // switch player turn 
         switchPlayerTurn();
         printNewRound();
 
     }
 
+    //Function that checks if there is a winner
     const checkWinner = () => {
         let check1 = board.checkWinnerColumn(getActivePlayer,switchPlayerTurn);
         let check2 = board.checkWinnerRow(getActivePlayer,switchPlayerTurn);
         let check3 = board.checkDiagonalWinner(getActivePlayer, switchPlayerTurn);
         let check4 = board.checkInverseDiagonalWinner(getActivePlayer,switchPlayerTurn);
+        let check5 = board.checkTie();
 
         //Resets the game if there is a winner
         if (check1 === true || check2 === true || check3 === true ||  check4 === true) {
             alert("The game is restarting");
             board.reset();
             if (getActivePlayer() === players[1]) {
+                P1Score += 1;
                 switchPlayerTurn();
             }
+            else {
+                P2Score += 1;
+            }
             printNewRound();
-            return;
+            return 1;
         }
+        else if (check5 === true) {
+            alert("Its a tie!!!");
+            alert("The game is restarting");
+            board.reset();
+            if (getActivePlayer() === players[1]) {
+                switchPlayerTurn();
+            }
+            ties += 1;
+            printNewRound();
+            return 1;
+        }   
     }
+
+    //Function that resets the game when you click the reset button
+    const theReset = () => {
+        board.reset();
+        if (getActivePlayer() === players[1]) {
+            switchPlayerTurn();
+        }
+        printNewRound();
+    }
+
+    //Function that returns the scores
+    const returnScores = () => {
+        return[P1Score,P2Score, ties];
+    }
+
+    //Function that resets the scores
+    const resetScores = () => {
+        P1Score = 0;
+        P2Score = 0;
+        ties = 0;
+    }
+
+    //Function that resets the name of the players
+    const resetPlayers = () => {
+        players[0].name = "PlayerOne";
+        players[1].name = "PlayerTwo";
+    }
+
+
 
     //Prints the round for the first play
     printNewRound();
 
-    return {playRound, getActivePlayer, getBoard: board.getBoard, checkWinner};
+    return {playRound, getActivePlayer, getBoard: board.getBoard, checkWinner, nameChanger, theReset, resetPlayers, returnScores, resetScores};
 }
 
-function screenController () {
+function screenController (number) {
     const game = gameController();
     const playerTurnDiv = document.querySelector(".turn");
     const boardDiv = document.querySelector(".board");
+    const changeNames = game.nameChanger();
+    const P1 = document.querySelector(".P1");
+    const P2 = document.querySelector(".P2");
+    const ties = document.querySelector(".ties");
 
+    // Function that changes the text for the scores
+    const establishScores = () => {
+        P1.textContent = `P1 wins: ${game.returnScores()[0]}`;
+        P2.textContent = `P2 wins: ${game.returnScores()[1]}`;
+        ties.textContent = `Ties: ${game.returnScores()[2]}`;
+    }
+
+    //Function that updates the screen every time a player click the board
     const updateScreen = () => {
-        boardDiv.textContent = "";
-    
+    boardDiv.textContent = "";
     const board = game.getBoard();
     const activePlayer = game.getActivePlayer();
     playerTurnDiv.textContent = `${activePlayer.name}'s turn.....`;
-
+    establishScores();
     let i = 0
     board.forEach(row => {
         let j = 0;
         row.forEach ((cell, index)  => {
             const cellButton = document.createElement("button");
-            cellButton.classList.add("cell");
+            cellButton.classList.add(`cell-${i}${j}`);
             cellButton.dataset.column = index;
             cellButton.dataset.row = i;
             cellButton.textContent = game.getBoard()[i][j];
@@ -256,10 +369,9 @@ function screenController () {
         })
         i += 1;
     })
-
-
 }
 
+    //Function that adds an event to every square in the board
     function clickHandlerBoard(e) {
         const selectedColumn = e.target.dataset.column;
         const selectedRow = e.target.dataset.row;
@@ -268,38 +380,61 @@ function screenController () {
         updateScreen();
         setTimeout(() => {
             checkWinner();
-          }, 1);
+          }, 2);
         console.log(game.getBoard());
-}
-boardDiv.addEventListener("click", clickHandlerBoard);
+    }
+    boardDiv.addEventListener("click", clickHandlerBoard);
 
-const checkWinner = () => {
-    game.checkWinner();
+    //Function that checks if there is a winner
+    const checkWinner = () => {
+    let checkWinnerNumber = game.checkWinner();
     updateScreen();
+    if (checkWinnerNumber === 1) {
+        boardDiv.removeEventListener("click", clickHandlerBoard);
+        playerTurnDiv.textContent = '';
+    }
+    }
+
+    //If statement that establish the start and reset button
+    if (number === 0) {
+        start = document.querySelector("#start");
+        restart = document.querySelector("#restart");
+        const board2 = game.getBoard();
+            boardDiv.textContent = "";
+            let i = 0
+            board2.forEach(row => {
+                let j = 0;
+                row.forEach ((cell, index)  => {
+                    const cellButton = document.createElement("button");
+                    cellButton.classList.add(`cell-${i}${j}`);
+                    cellButton.dataset.column = index;
+                    cellButton.dataset.row = i;
+                    cellButton.textContent = game.getBoard()[i][j];
+                    boardDiv.appendChild(cellButton);
+                    j++
+                })
+                i += 1;
+                })
+                boardDiv.removeEventListener("click", clickHandlerBoard);
+    
+                start.addEventListener("click", () => {
+                    number = 1;
+                    boardDiv.addEventListener("click", clickHandlerBoard);
+                    updateScreen();
+                });
+
+                restart.addEventListener("click", () => {
+                    game.theReset();
+                    updateScreen();
+                    boardDiv.removeEventListener("click", clickHandlerBoard);
+                    playerTurnDiv.textContent = '';
+                    game.resetPlayers();
+                    game.resetScores();
+                    establishScores();
+
+                })
+    }     
 }
 
-
-updateScreen();
-
-
-
-
-}
-
-screenController();
-
-
-
-// const game = gameController();
-
-
-
-
-// Make comments: Check
-// When you put a token that already exits just repeat the turn: Check
-// Decide how they win: Check
-
-// To do:
-
-// change the for Each to affect also the column: uncheck;
-
+// The function of start the game
+screenController(0);

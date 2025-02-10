@@ -68,25 +68,128 @@ button {
   /* end of the reset */
 
 
-.board {
-  display: grid;
-  height: 500px;
-  width: 500px;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(3, 1fr);
-  border: 1px solid black;
-  gap: 2px;
-  padding: 2px;
-  background-color: yellow;
+body {
+  background-color: rgb(118, 202, 174);
 }
 
-.cell {
+.board {
+  display: grid;
+  height: 450px;
+  width: 450px;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  background-color: white;
+  grid-column: 2/3;
+  grid-row: 2/3;
+  align-self: center;
+  justify-self: center;
+  justify-items: center;
+}
+
+.board > button {
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
-  font-size: 2rem;
-  border: 1px solid grey;
-  background: lightyellow;
+  font-size: 4rem;
+  background: rgb(231, 231, 220);
   cursor: pointer;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-rows: 1fr 4fr 1fr;
+  justify-content: center;
+  align-content: center;
+}
+
+.turn {
+  grid-column: 1/4;
+  grid-row: 1/2;
+  align-self: center;
+  justify-self: center;
+}
+
+.cell-00 {
+  border: none;
+  border-bottom: 5px solid black;
+  border-right: 5px solid black;
+}
+
+.cell-01 {
+  border: none;
+  border-bottom: 5px solid black;
+  border-right: 5px solid black;
+}
+
+.cell-02 {
+  border: none;
+  border-bottom: 5px solid black;
+}
+
+.cell-10 {
+  border: none;
+  border-bottom: 5px solid black;
+  border-right: 5px solid black;
+}
+
+.cell-11 {
+  border: none;
+  border-bottom: 5px solid black;
+  border-right: 5px solid black;
+}
+
+.cell-12 {
+  border: none;
+  border-bottom: 5px solid black;
+}
+
+.cell-20 {
+  border: none;
+  border-right: 5px solid black;
+}
+
+.cell-21 {
+  border: none;
+  border-right: 5px solid black;
+}
+
+.cell-22 {
+  border: none;
+}
+
+#playerOneContainer {
+  justify-self: center;
+}
+
+#playerTwoContainer {
+  justify-self: center;
+}
+
+#container2 {
+  justify-self: center;
+  align-self: center;
+  grid-column: 1/4;
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+}
+
+.P1 {
+  display: inline-block;
+  min-width: 100px;
+}
+
+.P2 {
+  display: inline-block;
+  min-width: 100px;
+}
+
+.ties {
+  display: inline-block;
+  min-width: 100px;
+}
+
+#scores {
+  align-self: center;
 }

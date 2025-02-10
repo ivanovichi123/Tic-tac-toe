@@ -9,8 +9,37 @@
 </head>
 <body>
     <div class="container">
+        <form id="playerOneContainer" onsubmit="return false;">
+            <p class="playerOne"><label for="playerOne_name">Player one name</label>
+                <br/>
+                <input class="input" type="text" id="playerOne_name" placeholder="PlayerOne" text name="PlayerOne" value="">
+                <br/>
+                <input  id="PlayerOneName" type="button" value="Submit">
+            </p>
+        </form>
         <h1 class="turn"></h1>
         <div class="board"></div>
+        <form id="playerTwoContainer" onsubmit="return false;">
+            <p class="playerTwo"><label for="playerTwo_name">Player two name</label>
+                <br/>
+                <input class="input" type="text" id="playerTwo_name" placeholder="PlayerTwo" text name="PlayerTwo" value="">
+                <br/>
+                <input  id="PlayerTwoName" type="button" value="Submit">
+            </p>
+        </form>
+        <div id="container2">
+            <div id="buttons">
+                <button id="start">Start</button>
+                <button id="restart">Restart</button>
+            </div>
+            <div id="scores">
+                <div class="P1">P1 wins: </div>
+                <div class="P2">P2 wins: </div>
+                <div class="ties">Ties: </div>
+            </div>
+
+        </div>
+
     </div>
 </body>
 </html>
